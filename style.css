@@ -2166,16 +2166,16 @@ select.mobile-device {
 .footer-distributed .footer-company-name {
     font-weight: 300;
     margin: 0 10px;
-    color: #666;
+    color: #1f1f1f;
     padding: 0;
 }
 
 .footer-distributed .footer-company-name a{
-	color: #ffffff;
+	color: #1f1f1f;
 }
 
 .footer-distributed .footer-company-name a:hover{
-	color: #1976D2;
+	color: #1f1f1f;
 }
 
 
