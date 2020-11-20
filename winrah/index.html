@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Win rah</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script
+	  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRgKqqj1pvvI_1jdg3f-me_K5PdBQ7eDk&callback=initMap&libraries=&v=weekly"
+      defer
+    ></script>
+	
+    <style type="text/css">
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+
+      /* Optional: Makes the sample page fill the window. */
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+	<script type="text/javascript" src="constants.js"></script>
+    <script>
+	 let map;
+	 let constants=new Constants();
+	function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: 36.6595915, lng: 3.1364675 },
+          zoom: 11,
+        });
+     var i;
+		  var iconGare = {
+        url: "images/ic_gare_im.png", // url
+        scaledSize: new google.maps.Size(20, 20), // size
+    };
+		 for(i=0;i<constants.gares.length;i++){
+		 var marker = new google.maps.Marker({
+          position: constants.gares[i],
+          map: map,
+		  icon : iconGare
+        });
+		}
+	  let ouestPath = new google.maps.Polyline({
+			path: constants.cheminaffrounAlger(),
+			geodesic: true,
+			strokeColor: "#000000",
+			strokeOpacity: 1.0,
+			strokeWeight: 2,
+		  });
+		ouestPath.setMap(map);		
+		
+		 let zeraldaPath = new google.maps.Polyline({
+			path: constants.cheminZeraldaAlger(),
+			geodesic: true,
+			strokeColor: "#000000",
+			strokeOpacity: 1.0,
+			strokeWeight: 2,
+		  });
+		zeraldaPath.setMap(map);	
+
+	 let theniaPath = new google.maps.Polyline({
+				path: constants.cheminEst(),
+				geodesic: true,
+				strokeColor: "#000000",
+				strokeOpacity: 1.0,
+				strokeWeight: 2,
+			  });
+			theniaPath.setMap(map);				
+			
+	 let tiziPath = new google.maps.Polyline({
+				path: constants.cheminTizi(),
+				geodesic: true,
+				strokeColor: "#000000",
+				strokeOpacity: 1.0,
+				strokeWeight: 2,
+			  });
+			tiziPath.setMap(map);				
+			
+		
+		
+	var positions = firebase.database().ref('Positions/');
+  
+    var iconTrainAlger = {
+        url: "images/train-black.png", // url
+        scaledSize: new google.maps.Size(20, 20), // size
+    };
+	 var iconTrainAffroun = {
+        url: "images/train-blue.png", // url
+        scaledSize: new google.maps.Size(20, 20), // size
+    };
+	 var iconTrainThenia = {
+        url: "images/train-vert.png", // url
+        scaledSize: new google.maps.Size(20, 20), // size
+    };
+	 var iconTrainZeralda = {
+        url: "images/train-or.png", // url
+        scaledSize: new google.maps.Size(20, 20), // size
+    };
+	 var iconTrainTizi = {
+        url: "images/train-orange.png", // url
+        scaledSize: new google.maps.Size(20, 20),		// size
+
+    };
+	
+	 var markersAlger  = [];
+	 var markersAffroun  = [];
+	 var markersThenia  = [];
+	 var markersTizi = [];
+	 var markersZeralda  = [];
+positions.on('value', function(snapshot) {
+var childData ;
+	  var iconTrain;
+  snapshot.forEach(function(childSnapshot) {
+      childData = childSnapshot.val();
+	  if(childData.Chemin.localeCompare("Vers ALGER")== 0){
+	  iconTrain = iconTrainAlger;
+	  }else if(childData.Chemin.localeCompare("Vers EL AFFROUN")== 0) {
+	  iconTrain = iconTrainAffroun;
+	  }else if(childData.Chemin.localeCompare("Vers ZERALDA")== 0) {
+	  iconTrain = iconTrainZeralda;
+	  }else if(childData.Chemin.localeCompare("Vers THENIA")== 0) {
+	  iconTrain = iconTrainThenia;
+	  }else if(childData.Chemin.localeCompare("Vers OUED AISSI") == 0) {
+	  iconTrain = iconTrainTizi;
+	  }
+	  else {
+	  iconTrain=iconTrainTizi;}
+	 
+	  var marker = new google.maps.Marker({
+          position: {lat : parseFloat(childData.Latitude), lng : parseFloat(childData.Longitude)},
+          map: map,
+		  icon :  iconTrain,		  
+        });
+		 google.maps.event.addListener(marker,"click", () => {
+		 var dif =(Date.now()-childData.temps)/60000;
+		 dif =Math.round(dif);
+			window.alert(childData.Chemin + " il y a "+ dif + " minutes");
+		console.log(childData);
+  });
+		 if(childData.Chemin.localeCompare("Vers ALGER")== 0){
+	 markersAlger.push(marker);
+	  }else if(childData.Chemin.localeCompare("Vers EL AFFROUN")== 0) {
+	  markersAffroun.push(marker);
+	  }else if(childData.Chemin.localeCompare("Vers ZERALDA")== 0) {
+	   markersZeralda.push(marker);
+	  }else if(childData.Chemin.localeCompare("Vers THENIA")== 0) {
+	   markersThenia.push(marker);
+	  }else if(childData.Chemin.localeCompare("Vers OUED AISSI") == 0) {
+	   markersTizi.push(marker);
+	  }
+	  else {
+	   markersTizi.push(marker);}
+		
+    });
+  
+});
+
+setTimeout(function(){ 
+
+
+
+var markerClustererAffroun = new MarkerClusterer(map ,markersAffroun,{
+imagePath : "images/train-blue"});
+
+var markerClustererZeralda = new MarkerClusterer(map ,markersZeralda,{
+imagePath : "images/train-or"});
+
+var markerClustererThenia = new MarkerClusterer(map ,markersThenia,{
+imagePath : "images/train-vert"});
+
+var markerClustererTizi = new MarkerClusterer(map ,markersTizi,{
+imagePath : "images/train-orange"});
+
+
+var markerClustererAlger = new MarkerClusterer(map ,markersAlger,{
+imagePath : "images/train-black"});
+
+
+}
+, 5000);	
+	}
+    </script>
+	
+	
+
+	
+	
+	<link rel="icon" type="image/png" href="images/portfolio_02.png" />
+  </head>
+  
+  <header class="header header_style_01">
+        <nav class="megamenu navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="index.html"><img src="images/portfolio_02.png" alt="image" height="10%" width="10%"></a>
+                </div>
+            </div>
+        </nav>
+    </header>
+  <body>
+    <div id="map"></div>
+	<!-- <script> initMap();</script> -->
+  </body>
+ 	 
+<script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-database.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-analytics.js"></script>
+
+        <script type="text/javascript" src="https://cdn.rawgit.com/googlemaps/js-marker-clusterer/gh-pages/src/markerclusterer.js"></script>	
+
+<script>
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  var firebaseConfig = {
+    apiKey: "AIzaSyCRgKqqj1pvvI_1jdg3f-me_K5PdBQ7eDk",
+    authDomain: "win-rah.firebaseapp.com",
+    databaseURL: "https://win-rah.firebaseio.com",
+    projectId: "win-rah",
+    storageBucket: "win-rah.appspot.com",
+    messagingSenderId: "146453456136",
+    appId: "1:146453456136:web:fd91311157f3c241b038bd",
+    measurementId: "G-MNLGDTQM4L"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+  
+  // Get a reference to the database service
+  <!-- var database = firebase.database(); -->
+
+</script>
+	
+</html>
