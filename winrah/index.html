@@ -2,7 +2,6 @@
 <html>
   <head>
     <title>Win rah</title>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <script
 	  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRgKqqj1pvvI_1jdg3f-me_K5PdBQ7eDk&callback=initMap&libraries=&v=weekly"
       defer
@@ -32,132 +31,66 @@
           center: { lat: 36.6595915, lng: 3.1364675 },
           zoom: 11,
         });
-     var i;
-		  var iconGare = {
-        url: "images/ic_gare_im.png", // url
-        scaledSize: new google.maps.Size(20, 20), // size
-    };
-		 for(i=0;i<constants.gares.length;i++){
-		 var marker = new google.maps.Marker({
-          position: constants.gares[i],
-          map: map,
-		  icon : iconGare
-        });
-		}
-	  let ouestPath = new google.maps.Polyline({
-			path: constants.cheminaffrounAlger(),
-			geodesic: true,
-			strokeColor: "#000000",
-			strokeOpacity: 1.0,
-			strokeWeight: 2,
-		  });
-		ouestPath.setMap(map);		
-		
-		 let zeraldaPath = new google.maps.Polyline({
-			path: constants.cheminZeraldaAlger(),
-			geodesic: true,
-			strokeColor: "#000000",
-			strokeOpacity: 1.0,
-			strokeWeight: 2,
-		  });
-		zeraldaPath.setMap(map);	
-
-	 let theniaPath = new google.maps.Polyline({
-				path: constants.cheminEst(),
-				geodesic: true,
-				strokeColor: "#000000",
-				strokeOpacity: 1.0,
-				strokeWeight: 2,
-			  });
-			theniaPath.setMap(map);				
-			
-	 let tiziPath = new google.maps.Polyline({
-				path: constants.cheminTizi(),
-				geodesic: true,
-				strokeColor: "#000000",
-				strokeOpacity: 1.0,
-				strokeWeight: 2,
-			  });
-			tiziPath.setMap(map);				
+     
+		Constants.addPaths(map);		
 			
 		
 		
 	var positions = firebase.database().ref('Positions/');
   
-    var iconTrainAlger = {
-        url: "images/train-black.png", // url
-        scaledSize: new google.maps.Size(20, 20), // size
-    };
-	 var iconTrainAffroun = {
-        url: "images/train-blue.png", // url
-        scaledSize: new google.maps.Size(20, 20), // size
-    };
-	 var iconTrainThenia = {
-        url: "images/train-vert.png", // url
-        scaledSize: new google.maps.Size(20, 20), // size
-    };
-	 var iconTrainZeralda = {
-        url: "images/train-or.png", // url
-        scaledSize: new google.maps.Size(20, 20), // size
-    };
-	 var iconTrainTizi = {
-        url: "images/train-orange.png", // url
-        scaledSize: new google.maps.Size(20, 20),		// size
-
-    };
-	
+   
 	 var markersAlger  = [];
 	 var markersAffroun  = [];
 	 var markersThenia  = [];
 	 var markersTizi = [];
 	 var markersZeralda  = [];
 positions.on('value', function(snapshot) {
-var childData ;
-	  var iconTrain;
+  var childData ;
+  var iconTrain;
   snapshot.forEach(function(childSnapshot) {
-      childData = childSnapshot.val();
-	  if(childData.Chemin.localeCompare("Vers ALGER")== 0){
-	  iconTrain = iconTrainAlger;
-	  }else if(childData.Chemin.localeCompare("Vers EL AFFROUN")== 0) {
-	  iconTrain = iconTrainAffroun;
-	  }else if(childData.Chemin.localeCompare("Vers ZERALDA")== 0) {
-	  iconTrain = iconTrainZeralda;
-	  }else if(childData.Chemin.localeCompare("Vers THENIA")== 0) {
-	  iconTrain = iconTrainThenia;
-	  }else if(childData.Chemin.localeCompare("Vers OUED AISSI") == 0) {
-	  iconTrain = iconTrainTizi;
-	  }
-	  else {
-	  iconTrain=iconTrainTizi;}
-	 
-	  var marker = new google.maps.Marker({
-          position: {lat : parseFloat(childData.Latitude), lng : parseFloat(childData.Longitude)},
-          map: map,
-		  icon :  iconTrain,		  
-        });
-		 google.maps.event.addListener(marker,"click", () => {
-		 var dif =(Date.now()-childData.temps)/60000;
-		 dif =Math.round(dif);
-			window.alert(childData.Chemin + " il y a "+ dif + " minutes");
-		console.log(childData);
-  });
-		 if(childData.Chemin.localeCompare("Vers ALGER")== 0){
-	 markersAlger.push(marker);
-	  }else if(childData.Chemin.localeCompare("Vers EL AFFROUN")== 0) {
-	  markersAffroun.push(marker);
-	  }else if(childData.Chemin.localeCompare("Vers ZERALDA")== 0) {
-	   markersZeralda.push(marker);
-	  }else if(childData.Chemin.localeCompare("Vers THENIA")== 0) {
-	   markersThenia.push(marker);
-	  }else if(childData.Chemin.localeCompare("Vers OUED AISSI") == 0) {
-	   markersTizi.push(marker);
-	  }
-	  else {
-	   markersTizi.push(marker);}
-		
-    });
-  
-});
+			  childData = childSnapshot.val();
+			  if(childData.Chemin.localeCompare("Vers ALGER")== 0){
+			  iconTrain = Constants.iconTrainAlger;
+			  }else if(childData.Chemin.localeCompare("Vers EL AFFROUN")== 0) {
+			  iconTrain = Constants.iconTrainAffroun;
+			  }else if(childData.Chemin.localeCompare("Vers ZERALDA")== 0) {
+			  iconTrain = Constants.iconTrainZeralda;
+			  }else if(childData.Chemin.localeCompare("Vers THENIA")== 0) {
+			  iconTrain = Constants.iconTrainThenia;
+			  }else if(childData.Chemin.localeCompare("Vers OUED AISSI") == 0) {
+			  iconTrain = Constants.iconTrainTizi;
+			  }
+			  else {
+			  iconTrain=Constants.iconTrainTizi;}
+			 
+			  var marker = new google.maps.Marker({
+				  position: {lat : parseFloat(childData.Latitude), lng : parseFloat(childData.Longitude)},
+				  map: map,
+				  icon :  iconTrain,		  
+				});
+				 google.maps.event.addListener(marker,"click", () => {
+				 var dif =(Date.now()-childData.temps)/60000;
+				 dif =Math.round(dif);
+					window.alert(childData.Chemin + " il y a "+ dif + " minutes");
+				console.log(childData);
+		  });
+				 if(childData.Chemin.localeCompare("Vers ALGER")== 0){
+					markersAlger.push(marker);
+					}else if(childData.Chemin.localeCompare("Vers EL AFFROUN")== 0) {
+							markersAffroun.push(marker);
+							}else if(childData.Chemin.localeCompare("Vers ZERALDA")== 0) {
+									markersZeralda.push(marker);
+									}else if(childData.Chemin.localeCompare("Vers THENIA")== 0) {
+											markersThenia.push(marker);
+											  }else if(childData.Chemin.localeCompare("Vers OUED AISSI") == 0) {
+														markersTizi.push(marker);
+														  }
+														  else {
+														   markersTizi.push(marker);}
+								
+			});
+		  
+		});
 
 setTimeout(function(){ 
 

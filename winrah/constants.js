@@ -1362,4 +1362,90 @@ class Constants {
 						];
 						return tizi;
 	}
+	static addPaths(map){
+		var i;
+		  var iconGare = {
+        url: "images/ic_gare_im.png", // url
+        scaledSize: new google.maps.Size(20, 20), // size
+    };
+		 for(i=0;i<constants.gares.length;i++){
+		 var marker = new google.maps.Marker({
+          position: constants.gares[i],
+          map: map,
+		  icon : iconGare
+        });
+		}
+	  let ouestPath = new google.maps.Polyline({
+			path: constants.cheminaffrounAlger(),
+			geodesic: true,
+			strokeColor: "#000000",
+			strokeOpacity: 1.0,
+			strokeWeight: 2,
+		  });
+		ouestPath.setMap(map);		
+		
+		 let zeraldaPath = new google.maps.Polyline({
+			path: constants.cheminZeraldaAlger(),
+			geodesic: true,
+			strokeColor: "#000000",
+			strokeOpacity: 1.0,
+			strokeWeight: 2,
+		  });
+		zeraldaPath.setMap(map);	
+
+	 let theniaPath = new google.maps.Polyline({
+				path: constants.cheminEst(),
+				geodesic: true,
+				strokeColor: "#000000",
+				strokeOpacity: 1.0,
+				strokeWeight: 2,
+			  });
+			theniaPath.setMap(map);				
+			
+	 let tiziPath = new google.maps.Polyline({
+				path: constants.cheminTizi(),
+				geodesic: true,
+				strokeColor: "#000000",
+				strokeOpacity: 1.0,
+				strokeWeight: 2,
+			  });
+			tiziPath.setMap(map);		
+	}
+	
+	static get iconTrainAlger(){ 
+	 var iconTrainAlger= {
+        url: "images/train-black.png", // url
+        scaledSize: new google.maps.Size(20, 20), // size
+    };
+	return iconTrainAlger;
+	}
+	 static get iconTrainAffroun() {
+		var iconTrainAffroun= {
+        url: "images/train-blue.png", // url
+        scaledSize: new google.maps.Size(20, 20), // size
+    };
+	return iconTrainAffroun;
+	 }
+	static get iconTrainThenia() {
+		 var iconTrainThenia= {
+        url: "images/train-vert.png", // url
+        scaledSize: new google.maps.Size(20, 20), // size
+    };
+	return iconTrainThenia;
+	}
+	static get iconTrainZeralda() {
+		var iconTrainZeralda= {
+        url: "images/train-or.png", // url
+        scaledSize: new google.maps.Size(20, 20), // size
+    };
+	return iconTrainZeralda;
+	}
+	static get iconTrainTizi() {
+		var iconTrainTizi= {
+        url: "images/train-orange.png", // url
+        scaledSize: new google.maps.Size(20, 20),		// size
+
+    };
+	return iconTrainTizi ;}
+	
 }
