@@ -68,12 +68,14 @@ positions.on('value', function(snapshot) {
 				  map: map,
 				  icon :  iconTrain,		  
 				});
-				 google.maps.event.addListener(marker,"click", () => {
-				 var dif =(Date.now()-childData.temps)/60000;
-				 dif =Math.round(dif);
-					window.alert(childData.Chemin + " il y a "+ dif + " minutes");
-				console.log(childData);
-		  });
+				marker.addListener("click",  (function(childData) {
+					return function(e) {
+							 var tempsDerniereDetection =(Date.now()-childData.temps)/60000;
+							 tempsDerniereDetection =Math.round(tempsDerniereDetection);
+								window.alert(childData.Chemin + " il y a "+ tempsDerniereDetection + " minutes ");
+							console.log(childData);
+							}
+		  }(childData)));
 				 if(childData.Chemin.localeCompare("Vers ALGER")== 0){
 					markersAlger.push(marker);
 					}else if(childData.Chemin.localeCompare("Vers EL AFFROUN")== 0) {
