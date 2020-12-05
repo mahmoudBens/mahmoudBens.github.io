@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>WinRah OSM</title>
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+				integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+				crossorigin=""/>
+		<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+						   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+						   crossorigin=""></script>
+		<script type="text/javascript" src="rails.js"></script>
+		<header class="header header_style_01">
+        <nav class="megamenu navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="index.html"><img src="images/portfolio_02.png" alt="image" height="10%" width="10%"></a>
+                </div>
+            </div>
+        </nav>
+    </header>
+	</head>
+	<body>
+
+		<div id = "map" style = " height: 580px"></div>
+		<script>
+                 // Creating map options
+                 var mapOptions = {
+                    center: [36.6595915,3.1364675],
+                    zoom: 10
+                 }
+                 // Creating a map object
+                 var map = new L.map('map', mapOptions);
+                 // Creating a Layer object
+                 var layer = new L.TileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}.png');
+                 // Adding layer to the map
+                 map.addLayer(layer);
+				const  geojsonFeature=  Path.returnPathGlobal();
+				 L.geoJSON(geojsonFeature).addTo(map);
+				 
+				 var positions = firebase.database().ref('Positions/');
+					positions.on('value', function(snapshot) {
+					  var childData ;
+					  var iconTrain;
+					  snapshot.forEach(function(childSnapshot) {
+					   childData = childSnapshot.val();
+					   var marker = L.marker([ parseFloat(childData.Latitude),parseFloat(childData.Longitude)]).addTo(map);
+						});
+						});
+		</script>
+                 
+				
+		</body>
+		<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-database.js"></script>
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-analytics.js"></script>
+<script>
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  var firebaseConfig = {
+    apiKey: "AIzaSyCRgKqqj1pvvI_1jdg3f-me_K5PdBQ7eDk",
+    authDomain: "win-rah.firebaseapp.com",
+    databaseURL: "https://win-rah.firebaseio.com",
+    projectId: "win-rah",
+    storageBucket: "win-rah.appspot.com",
+    messagingSenderId: "146453456136",
+    appId: "1:146453456136:web:fd91311157f3c241b038bd",
+    measurementId: "G-MNLGDTQM4L"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+</script>
+		
+</html>
